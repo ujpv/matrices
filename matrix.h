@@ -17,6 +17,7 @@ public:
   Matrix(size_t height, size_t width);
   template<class It>
   Matrix(It begin, It end, size_t height, size_t width);
+  Matrix(std::vector<double> valus, size_t height, size_t width);
 
   size_t height() const;
   size_t width() const;
@@ -27,7 +28,11 @@ public:
   Matrix operator*(const Matrix& other) const;
   friend std::ostream& operator<<(std::ostream& os, const Matrix& m);
 
+  bool equals(const Matrix& other, double eps) const;
+
 private:
+  size_t height_ = 0;
+  size_t width_ = 0;
   std::vector<std::vector<double>> data_;
 };
 
@@ -35,7 +40,9 @@ std::ostream& operator<<(std::ostream& s, const Matrix& m);
 
 template<class It>
 Matrix::Matrix(It begin, It end, size_t height, size_t width)
-    : data_(height, std::vector<double>(width))
+    : height_(height)
+    , width_(width)
+    , data_(height, std::vector<double>(width))
 {
   if (!height != !width) // One dimension is zero, other not zero
     throw MatrixException("Not zero dimension for empty matrix");

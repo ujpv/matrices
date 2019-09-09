@@ -22,7 +22,7 @@ int main()
 {
   try {
     auto data = readData(std::cin);
-    if (data.size() & 1ul) {
+    if (data.size() & 1u) {
       std::cerr << "Input data size is odd\n";
       return 1;
     }
