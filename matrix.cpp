@@ -16,6 +16,7 @@
 // Optimized CPU cache code(two inner loops is swapped):
 // for (size_t row = 0; row < m1.height(); ++row) {
 //   for (size_t k = 0; k < m1.width(); ++k) {
+//     //auto jobIndex = row * m1.width() + k;
 //     for (size_t col = 0; col < m2.width(); ++col) {
 //       result.at(row, col) += (m1.at(row, k) * m2.at(k, col));
 //     }
@@ -23,7 +24,8 @@
 // }
 // Optimized code works 2-3 time faster
 
-// We take the body of the inner loop as a job with parameters col and k.
+// We take the body of the inner loop as a job with parameters row and k.
+// By the job index we can find row and k values.
 
 namespace {
 
