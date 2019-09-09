@@ -70,7 +70,7 @@ Matrix mutl_multithread_impl(const Matrix& m1, const Matrix& m2)
 
   Matrix result(m1.height(), m2.width());
   const size_t totalJob = m1.height() * m2.width();
-  std::atomic_size_t currentJob;
+  std::atomic_size_t currentJob{};
 
   auto worker = [&]() noexcept {
     while (currentJob != totalJob) {
