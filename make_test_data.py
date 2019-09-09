@@ -1,3 +1,5 @@
+import random
+
 def writeData(a, file_name):
     with open(file_name, 'w') as f:
         f.write(' '.join(map(str, a)))
