@@ -11,7 +11,7 @@ Matrix::Matrix(size_t height, size_t width)
   : data_(height, std::vector<double>(width))
 {
   if (!height != !width) // One dimmestion is zero other not zero
-    throw MatrixException("Not zero dimmension for empty matrix");
+    throw MatrixException("Not zero dimension for empty matrix");
 }
 
 size_t Matrix::height() const
@@ -67,6 +67,7 @@ Matrix mutl_multithread_impl(const Matrix& m1, const Matrix& m2)
 {
   if (m1.height() != m2.width())
     throw MatrixException("Wrong size");
+
   Matrix result(m1.height(), m2.width());
   const size_t totalJob = m1.height() * m2.width();
   std::atomic_size_t currentJob;
