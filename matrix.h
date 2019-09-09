@@ -37,8 +37,8 @@ template<class It>
 Matrix::Matrix(It begin, It end, size_t height, size_t width)
     : data_(height, std::vector<double>(width))
 {
-  if (!height != !width) // One dimmestion is zero, other not zero
-    throw MatrixException("Not zero dimmension for empty matrix");
+  if (!height != !width) // One dimension is zero, other not zero
+    throw MatrixException("Not zero dimension for empty matrix");
 
   for (size_t r = 0; r < height; ++r) {
     for (size_t c = 0; c < width; ++c) {
@@ -49,5 +49,5 @@ Matrix::Matrix(It begin, It end, size_t height, size_t width)
   }
 
   if (begin != end)
-    throw MatrixException("Wrong range size");
+    throw MatrixException("Wrong input range size");
 }
