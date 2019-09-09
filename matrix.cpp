@@ -28,47 +28,45 @@ namespace {
 
 inline auto indexToJob(size_t index, size_t width)
 {
-    struct {
-        size_t row;
-        size_t k;
-    } res{index / width, index % width};
+  struct {
+    size_t row;
+    size_t k;
+  } res{index / width, index % width};
 
-    return res;
+  return res;
 }
 
 Matrix multiThreadImpl(const Matrix& m1, const Matrix& m2)
 {
-    if (m1.height() != m2.width())
-        throw MatrixException("Wrong size");
+  if (m1.height() != m2.width())
+    throw MatrixException("Wrong size");
 
-    Matrix result(m1.height(), m2.width());
-    const size_t totalJob = m1.height() * m2.width();
-    std::atomic_size_t currentJob{};
+  Matrix result(m1.height(), m2.width());
+  const size_t totalJobs = m1.height() * m2.width();
+  std::atomic_size_t currentJob{};
 
-    auto worker = [&]() noexcept {
-        while (currentJob != totalJob) {
-            auto cur = currentJob.load();
-            if (currentJob.compare_exchange_strong(cur, cur + 1)) {
-                auto job = indexToJob(cur, m1.width());
-                for (size_t col = 0; col < m1.width(); ++col) {
-                    result.at(job.row, col) += (m1.at(job.row, job.k) *
-                                                m2.at(job.k, col));
-                }
-            }
-        }
-    };
+  auto worker = [&]() noexcept {
+    while (currentJob != totalJobs) {
+      auto cur = currentJob.load();
+      if (currentJob.compare_exchange_strong(cur, cur + 1)) {
+        auto job = indexToJob(cur, m1.width());
+        for (size_t col = 0; col < m1.width(); ++col)
+          result.at(job.row, col) += m1.at(job.row, job.k) * m2.at(job.k, col);
+      }
+    }
+  };
 
-    std::vector<std::thread> threadPool;
-    for (size_t i = 0; i < std::thread::hardware_concurrency(); ++i)
-        threadPool.emplace_back(worker);
+  std::vector<std::thread> threadPool;
+  for (size_t i = 0; i < std::thread::hardware_concurrency(); ++i)
+    threadPool.emplace_back(worker);
 
-    for (auto& thread: threadPool)
-        thread.join();
+  for (auto& thread: threadPool)
+    thread.join();
 
-    return result;
+  return result;
 }
 
-}
+} // namespace
 
 MatrixException::MatrixException(const std::string &msg)
   : std::runtime_error(msg)
@@ -77,7 +75,7 @@ MatrixException::MatrixException(const std::string &msg)
 Matrix::Matrix(size_t height, size_t width)
   : data_(height, std::vector<double>(width))
 {
-  if (!height != !width) // One dimension is zero other not zero
+  if (!height != !width) // One of dimensions is zero other not zero
     throw MatrixException("Not zero dimension for empty matrix");
 }
 

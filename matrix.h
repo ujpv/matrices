@@ -11,7 +11,6 @@ public:
   explicit MatrixException(const std::string& msg);
 };
 
-
 class Matrix {
 public:
   Matrix() = default;
@@ -28,6 +27,7 @@ public:
   Matrix operator*(const Matrix& other) const;
   friend std::ostream& operator<<(std::ostream& os, const Matrix& m);
 
+private:
   std::vector<std::vector<double>> data_;
 };
 
