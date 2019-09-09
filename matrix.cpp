@@ -22,7 +22,7 @@
 //     }
 //   }
 // }
-// Optimized code works 2-3 time faster
+// The optimized code works 2-3 time faster
 
 // We take the body of the inner loop as a job with parameters row and k.
 // By the job index we can find row and k values.
